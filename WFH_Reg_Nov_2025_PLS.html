@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>WFH Security - All in one (Final v6)</title>
+<style>
+  :root{
+    --purple:#3b2a80;
+    --blue:#1e2a78;
+    --orange:#f39c12;
+    --white:#ffffff;
+    --highlight:#ffcc00;
+  }
+  html,body{height:100%;margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;}
+  .center-wrap{max-width:1100px;margin:40px auto;padding:0 20px;}
+  .form-container{max-width:600px;margin:60px auto;background:#fff;padding:30px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.08);} 
+  .form-container h2{color:var(--purple);text-align:center;margin:0 0 12px;font-size:22px;}
+  label{display:block;margin-top:12px;font-weight:600;color:#333}
+  input[type="text"],input[type="email"],select{width:100%;padding:10px;margin-top:6px;border:1px solid #ccc;border-radius:6px;font-size:15px}
+  .radio-group{margin-top:6px}
+  .radio-group label{margin-right:12px;font-weight:500}
+  .submit-btn{margin-top:18px;width:100%;padding:12px;background:linear-gradient(90deg,#0078D4,#005fa3);color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer}
+  /* Warning section */
+  .warning-section{display:none;min-height:100vh;padding:60px 20px;background:linear-gradient(135deg,#2c3e50,#d32f2f);color:#fff;text-align:center}
+  .warning-box{max-width:900px;margin:0 auto;background:rgba(255,255,255,0.06);padding:30px;border-radius:12px;backdrop-filter:blur(4px);box-shadow:0 6px 20px rgba(0,0,0,0.25)}
+  .warning-title{font-size:34px;color:#ffcc00;font-weight:900;animation:blink 1s infinite;text-shadow:0 0 10px #ffcc00;margin-bottom:20px;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+  .warning-box code{background:#fff3cd;color:#111;padding:3px 6px;border-radius:4px;font-weight:600}
+  .warning-box ul{list-style:none;padding:0;margin:12px 0;text-align:left}
+  .warning-box li{padding-left:26px;position:relative;margin-bottom:10px;font-weight:600}
+  .warning-box li:before{content:"🛡";position:absolute;left:0;top:0}
+  .btn-group{margin-top:18px}
+  .btn{display:inline-block;margin-right:10px;padding:10px 18px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
+  .btn-understand{background:#4caf50;color:#fff}
+  .btn-connect{background:#2196f3;color:#fff}
+  .btn-learn{background:#ffb300;color:#000}
+  .footer-note{margin-top:18px;display:inline-block;background:#fff3cd;color:#000;padding:10px;border-radius:6px;border:1px solid #ffeeba}
+  /* Final screen */
+  .final-screen{display:none;height:100vh;width:100%;background:linear-gradient(135deg,var(--blue) 0%, var(--purple) 100%);color:#fff;overflow:hidden;position:relative}
+  .final-inner{display:flex;align-items:center;justify-content:space-between;height:100%;max-width:1400px;margin:0 auto;padding:40px;gap:40px;flex-wrap:wrap;}
+  .left-col{flex:1;min-width:420px}
+  .right-col{flex:0 0 420px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+  .title{font-size:48px;font-weight:800;line-height:1;margin:0 0 20px;animation:fastBlink 0.7s infinite;}
+  @keyframes fastBlink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+  .point{font-size:22px;margin:14px 0;color:rgba(255,255,255,0.95)}
+  .connect-title{font-size:26px;font-weight:800;margin-top:22px;text-decoration:underline}
+  .contact{font-size:20px;margin:10px 0;color:rgba(255,255,255,0.95)}
+  .highlight{color:var(--highlight);font-weight:800}
+  .support-icon{font-size:90px;display:inline-block;background:rgba(255,255,255,0.1);border-radius:50%;padding:30px;box-shadow:0 0 20px rgba(0,0,0,0.3);} 
+  .sure-btn{margin-top:22px;padding:14px 26px;border-radius:12px;background:#ffffff;color:#123a6a;border:none;font-size:22px;font-weight:800;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.2)}
+  .footer-bar{position:absolute;left:0;right:0;bottom:0;height:70px;background:#e67e22;color:#000;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;text-align:center;padding:0 20px;}
+  /* Popup */
+  .popup-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;}
+  .popup-box{background:#fff;color:#222;padding:30px;border-radius:16px;max-width:520px;width:90%;text-align:center;box-shadow:0 8px 25px rgba(0,0,0,0.4);animation:slideUp 0.5s ease-out;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+  
+.popup-title {
+  font-size: 34px;
+  font-weight: 900;
+  margin-bottom: 25px;
+  background: linear-gradient(90deg, #00bfff, #7a3eff, #00ffff, #00bfff);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: waveGradient 4s linear infinite, blinkNeon 1.8s ease-in-out infinite;
+  letter-spacing: 1.5px;
+}
+@keyframes waveGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes blinkNeon {
+  0%, 100% { opacity: 1; text-shadow: 0 0 10px #00eaff, 0 0 25px #7a3eff; }
+  50% { opacity: 0.7; text-shadow: 0 0 25px #00ffff, 0 0 45px #a76eff; }
+}
+
+  .popup-contact{margin:8px 0;font-size:18px;}
+  .popup-btn{margin-top:15px;padding:10px 22px;border:none;border-radius:8px;background:#0078D4;color:#fff;font-weight:700;cursor:pointer;}
+  .close-btn{margin-top:10px;cursor:pointer;color:#0078D4;font-weight:700;text-decoration:underline;background:none;border:none;}
+
+  /* Learn more full overlay */
+  .learn-overlay{display:none;position:fixed;inset:0;background:linear-gradient(180deg, rgba(10,10,10,0.95), rgba(0,0,0,0.95));z-index:1500;overflow:auto;padding:40px 20px;color:#fff}
+  .learn-card{max-width:1000px;margin:40px auto;background:rgba(255,255,255,0.03);padding:30px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
+  .learn-header{display:flex;justify-content:space-between;align-items:center;gap:20px}
+  .learn-title{font-size:28px;font-weight:900;color:var(--highlight)}
+  .learn-close{background:#ff6b6b;border:none;padding:8px 14px;border-radius:8px;font-weight:800;cursor:pointer}
+  .learn-section h3{color:#fff;font-size:20px;margin-top:18px}
+  .learn-section p, .learn-section li{color:#e6e6e6;line-height:1.6}
+  .learn-section ul{margin-left:18px}
+  .example-box{background:rgba(0,0,0,0.15);padding:12px;border-radius:8px;margin:12px 0;border-left:4px solid var(--highlight)}
+  .actions{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
+  .action-btn{padding:10px 14px;border-radius:8px;border:none;font-weight:700;cursor:pointer}
+  .action-report{background:#28a745;color:#fff}
+  .action-help{background:#0078D4;color:#fff}
+  @media (max-width:720px){.left-col{min-width:320px}.right-col{flex-basis:320px}}
+
+/* --- Updated IT CONNECT POPUP --- */
+.popup-overlay{
+  display:none;
+  position:fixed;
+  top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(6px);
+  z-index:1000;
+  align-items:center;
+  justify-content:center;
+  animation:fadeIn 0.6s ease-in-out;
+}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.popup-box{
+  background:radial-gradient(circle at top left,#0a0a1a 0%,#0a0a0a 100%);
+  color:#fff;
+  padding:40px;
+  border-radius:18px;
+  max-width:600px;width:90%;
+  text-align:center;
+  box-shadow:0 0 25px #00b7ff, inset 0 0 25px rgba(100,0,255,0.4);
+  border:2px solid rgba(0,200,255,0.6);
+  position:relative;
+  overflow:hidden;
+  animation:glowPulse 2s infinite alternate;
+}
+@keyframes glowPulse {
+  from{box-shadow:0 0 20px #005eff, inset 0 0 20px rgba(120,0,255,0.3);}
+  to{box-shadow:0 0 30px #00f2ff, inset 0 0 35px rgba(200,0,255,0.5);}
+}
+
+.popup-title {
+  font-size: 34px;
+  font-weight: 900;
+  margin-bottom: 25px;
+  background: linear-gradient(90deg, #00bfff, #7a3eff, #00ffff, #00bfff);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: waveGradient 4s linear infinite, blinkNeon 1.8s ease-in-out infinite;
+  letter-spacing: 1.5px;
+}
+@keyframes waveGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes blinkNeon {
+  0%, 100% { opacity: 1; text-shadow: 0 0 10px #00eaff, 0 0 25px #7a3eff; }
+  50% { opacity: 0.7; text-shadow: 0 0 25px #00ffff, 0 0 45px #a76eff; }
+}
+
+.popup-contact{margin:14px 0;font-size:18px;color:#cfcfcf;}
+.popup-contact strong{color:#00eaff;}
+.icon-grid{
+  display:flex;
+  justify-content:center;
+  gap:28px;
+  margin-bottom:25px;
+}
+.icon-item{
+  text-align:center;
+  font-size:34px;
+  color:#00eaff;
+  filter:drop-shadow(0 0 10px #00eaff);
+  transition:transform 0.3s ease;
+}
+.icon-item:hover{
+  transform:scale(1.2);
+  color:#a76eff;
+}
+.icon-label{
+  display:block;
+  font-size:14px;
+  color:#ddd;
+  margin-top:4px;
+}
+.popup-btn, .close-btn{
+  margin-top:15px;
+  padding:12px 28px;
+  border:none;
+  border-radius:8px;
+  font-weight:700;
+  cursor:pointer;
+  font-size:16px;
+}
+.popup-btn{
+  background:linear-gradient(90deg,#00b7ff,#7a3eff);
+  color:#fff;
+  box-shadow:0 0 15px rgba(0,180,255,0.7);
+  transition:all 0.3s ease;
+}
+.popup-btn:hover{
+  background:linear-gradient(90deg,#7a3eff,#00b7ff);
+  box-shadow:0 0 25px rgba(140,0,255,0.8);
+}
+.close-btn{
+  background:none;
+  color:#00eaff;
+  text-decoration:underline;
+}
+
+
+.icon-item svg { filter: drop-shadow(0 0 12px rgba(0,200,255,0.6)); transition: transform 0.25s ease, filter 0.25s ease; }
+.icon-item:hover svg { transform: scale(1.12); filter: drop-shadow(0 0 20px rgba(120,0,255,0.9)); }
+
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var emailInput = document.getElementById("email");
+    var errorMsg = document.getElementById("email-error");
+
+    if (emailInput) {
+        emailInput.addEventListener("input", function() {
+            var value = emailInput.value;
+            var allowedDomains = ["@prana4life.com", "@rudhrainfosolutions.com"];
+            var isValid = allowedDomains.some(domain => value.endsWith(domain));
+
+            if (!isValid && value.includes("@")) {
+                emailInput.setCustomValidity("Only @prana4life.com or @rudhrainfosolutions.com domains are allowed.");
+                if (errorMsg) errorMsg.style.display = "block";
+            } else {
+                emailInput.setCustomValidity("");
+                if (errorMsg) errorMsg.style.display = "none";
+            }
+        });
+    }
+});
+</script>
+</head>
+<body>
+<div class="center-wrap" id="formSection">
+<div class="form-container">
+<h2>WFH Registration (3–10 Nov 2025)</h2>
+<form id="wfhForm">
+<label for="name">Full Name</label>
+<input id="name" name="name" required="" type="text"/>
+<label for="email">Email ID</label>
+<input id="email" name="email" required="" type="email"/><span id="email-error" style="color:red; display:none;">Only @prana4life.com or @rudhrainfosolutions.com domains are allowed.</span>
+<div id="emailError" style="color:red;font-weight:600;margin-top:5px;display:none;">❌ Only official company emails allowed (@prana4life.com / @rudhrainfosolutions.com)</div>
+<label>High Speed WiFi at Home?</label>
+<div class="radio-group">
+<label><input name="wifi" required="" type="radio" value="yes"/> Yes</label>
+<label><input name="wifi" type="radio" value="no"/> No</label>
+</div>
+<label>Company Provided Laptop?</label>
+<div class="radio-group">
+<label><input name="laptop" required="" type="radio" value="yes"/> Yes</label>
+<label><input name="laptop" type="radio" value="no"/> No</label>
+</div>
+<label for="location">Location</label>
+<select id="location" name="location" required="">
+<option value="">--Select Location--</option>
+<option>Chennai</option>
+<option>Bangalore</option>
+<option>Hyderabad</option>
+<option>Pune</option>
+<option>UK</option>
+<option>USA</option>
+</select>
+<button class="submit-btn" type="submit">Submit</button>
+</form>
+</div>
+</div>
+<section class="warning-section" id="warningSection">
+<div class="warning-box">
+<div class="warning-title">⚠ SECURITY CHECK WARNING</div>
+<p><strong>Fake Email Detected:</strong><br/><code>hr.prana4life@outlook.com</code></p>
+<p>You’ve submitted information to an <strong>unauthorized email address</strong>.<br/>Please confirm: <strong>Did you verify the sender’s domain before responding?</strong></p>
+<p>✅ The official domain is: <code>@prana4life.com</code></p>
+<h3>🛡 How to Stay Safe:</h3>
+<ul>
+<li>Always verify the domain after the “@” symbol.</li>
+<li>Hover over email addresses and links before clicking.</li>
+<li>Report suspicious emails to IT Support immediately.</li>
+</ul>
+<div class="quote">“I acknowledge the mistake and will verify email domains before responding in the future.”</div>
+<div class="btn-group">
+<button class="btn btn-understand" id="understandBtn">✔ I Understand</button>
+<button class="btn btn-connect" id="connectBtn">🔗 Connect to IT</button>
+<button class="btn btn-learn" id="learnBtn">ℹ Learn More</button>
+</div>
+<div class="footer-note">⚠ This message has been sent by the IT Team as part of an IT Security awareness exercise.</div>
+</div>
+</section>
+<section aria-hidden="true" class="final-screen" id="finalScreen">
+<div class="final-inner">
+<div class="left-col">
+<h1 class="title">Stay Alert:<br/>Phishing Emails</h1>
+<div class="point">Thank you for understanding</div>
+<div class="point">Do not click on unknown links</div>
+<div class="point">Report immediately to IT</div>
+<div class="point">Spread awareness among your team</div>
+<div class="connect-title">Connect IT Team</div>
+<div class="contact">📧 Remote Support (All loc.): <strong>manaf@prana4life.com</strong></div>
+<div class="contact">📍 Onsite Support (Chennai): <strong>praj.m@rudhrainfosolutions.com</strong></div>
+<div class="contact">📍 Onsite Support (Bangalore): <strong>manaf@prana4life.com</strong></div>
+<div class="contact highlight">All IT emails will come from it@prana4life.com</div>
+</div>
+<div class="right-col">
+<div class="support-icon">💬📧🎧</div>
+<button class="sure-btn" id="sureBtn">Sure, Thank you</button>
+</div>
+</div>
+<div class="footer-bar">This email was sent as part of IT Security Awareness Training by IT Department</div>
+</section>
+<!-- Popup Modal (Tech Styled) -->
+<div class="popup-overlay" id="popupOverlay">
+<div class="popup-box">
+<div class="popup-title">⚙ CONNECT WITH IT TEAM ⚙</div>
+<div class="icon-grid">
+<!-- Microsoft Teams (stylized cluster + T) -->
+<div class="icon-item" title="Microsoft Teams">
+<svg aria-hidden="true" height="44" viewbox="0 0 48 48" width="44" xmlns="http://www.w3.org/2000/svg">
+<g fill="none" fill-rule="evenodd">
+<rect fill="#4F46E5" height="12" rx="3" width="18" x="8" y="6"></rect>
+<rect fill="#3730A3" height="18" rx="3" transform="rotate(-10 15 29)" width="18" x="6" y="20"></rect>
+<circle cx="34" cy="14" fill="#00E5FF" r="7"></circle>
+<path d="M30 11h6v6h-6z" fill="#002E5B" opacity="0.12"></path>
+<!-- T letter -->
+<path d="M33.5 12.5h-5v2.2h2v7.3h1.1v-7.3h2v-2.2z" fill="#fff"></path>
+</g>
+</svg>
+<span class="icon-label">Microsoft Teams</span>
+</div>
+<!-- Connect (laptop + desktop) -->
+<div class="icon-item" title="Connect">
+<svg aria-hidden="true" fill="currentColor" height="44" viewbox="0 0 64 64" width="44" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#00eaff" height="14" rx="2" ry="2" width="20" x="6" y="12"></rect>
+<rect fill="#7a3eff" height="14" rx="2" ry="2" width="20" x="38" y="20"></rect>
+<path d="M16 26v6h8v4h-6v6h24v-6h-6v-4h8v-6H16z" fill="#00ffff"></path>
+<rect fill="#00eaff" height="4" rx="1" width="40" x="12" y="46"></rect>
+</svg>
+<span class="icon-label">Connect</span>
+</div>
+<!-- Call (phone) -->
+<div class="icon-item" title="Call">
+<svg aria-hidden="true" fill="currentColor" height="44" viewbox="0 0 24 24" width="44" xmlns="http://www.w3.org/2000/svg">
+<path d="M6.6 10.2a15.05 15.05 0 006.2 6.2l2.1-2.1a1 1 0 011.1-.2c.9.4 2 .7 3.1.7a1 1 0 011 1v3.4a1 1 0 01-1 1A17 17 0 013 5a1 1 0 011-1h3.4a1 1 0 011 1c0 1.1.2 2.2.7 3.1a1 1 0 01-.6 1.1l-2 1z"></path>
+</svg>
+<span class="icon-label">Call</span>
+</div>
+<!-- Email (envelope) -->
+<div class="icon-item" title="Email">
+<svg aria-hidden="true" fill="currentColor" height="44" viewbox="0 0 24 24" width="44" xmlns="http://www.w3.org/2000/svg">
+<path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path>
+</svg>
+<span class="icon-label">Email</span>
+</div>
+<!-- WhatsApp (green logo) -->
+<div class="icon-item" title="WhatsApp">
+<svg aria-hidden="true" height="44" viewbox="0 0 24 24" width="44" xmlns="http://www.w3.org/2000/svg">
+<g fill="none" fill-rule="evenodd">
+<circle cx="12" cy="12" fill="#25D366" r="11"></circle>
+<path d="M17.2 14.8c-.3-.2-1.7-.8-1.9-.9-.2-.1-.4-.1-.6.1-.2.2-.7.9-.9 1.1-.2.2-.4.2-.7.1-1.1-.4-2.2-1.6-3.1-3-.2-.3 0-.5.1-.6.1-.1.2-.2.4-.3.1-.1.2-.3.2-.5 0-.2 0-.6-.1-.9-.1-.3-.1-.5-.4-.6-.3-.1-.6-.1-.9-.1-.3 0-.7.1-1 .4-.2.2-.7.7-.7 1.7 0 1 .6 2.8 2.1 4.5 1.4 1.6 2.8 2.1 3.8 2.2.9.1 1.5.1 1.9.1.4 0 1-.1 1.4-.3.3-.2.9-.4 1.1-.8.2-.4.2-.8.1-1-.1-.2-.4-.4-.8-.6z" fill="#fff"></path>
+</g>
+</svg>
+<span class="icon-label">WhatsApp</span>
+</div>
+<!-- Zoho Cliq (updated modern chat bubble "C") -->
+<div class="icon-item" title="Zoho Cliq">
+<svg aria-hidden="true" height="44" viewbox="0 0 64 64" width="44" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#0072FF" height="40" rx="8" width="56" x="4" y="12"></rect>
+<path d="M32 20a12 12 0 1 0 0 24 12 12 0 0 0 0-24zm0 20a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" fill="#fff"></path>
+<circle cx="32" cy="32" fill="#0072FF" r="4"></circle>
+<path d="M16 52l6-6h20l6 6H16z" fill="#0052CC"></path>
+</svg>
+<span class="icon-label">Zoho Cliq</span>
+</div>
+</div>
+<div class="popup-contact">📧 Remote Support (All loc.): <strong>manaf@prana4life.com</strong></div>
+<div class="popup-contact">📍 Chennai: <strong>praj.m@rudhrainfosolutions.com</strong></div>
+<div class="popup-contact">📍 Bangalore: <strong>manaf@prana4life.com</strong></div>
+<div class="popup-contact">⚠ All IT emails come from <strong>it@prana4life.com</strong></div>
+<a href="https://outlook.office.com/mail/inbox/id/AAQkAGJjZDgzYmZmLTdiNmQtNDdmMi1hMWM5LWFjMjRkOGRhYWE2OAAQAPuaNhGWtUzlq2m2FkvDu%2Bo%3D" target="_blank"><button class="popup-btn" id="mailtoBtn">📧 Send Email</button></a><br/>
+<button class="close-btn" id="closePopupBtn">Close</button>
+</div>
+</div>
+<!-- Learn More Overlay -->
+<section aria-hidden="true" class="learn-overlay" id="learnOverlay">
+<div aria-labelledby="learnTitle" aria-modal="true" class="learn-card" role="dialog">
+<div class="learn-header">
+<div>
+<div class="learn-title" id="learnTitle">Phishing — How to recognise &amp; respond</div>
+<div style="font-weight:700;margin-top:6px;color:#ddd">Short guide for all employees</div>
+</div>
+<div>
+<button class="learn-close" id="learnCloseBtn">Close</button>
+</div>
+</div>
+<div class="learn-section">
+<h3>What is phishing?</h3>
+<p>Phishing is a type of social engineering attack where attackers impersonate trusted organisations or people to trick you into revealing sensitive information (passwords, personal data, or banking details) or to get you to click malicious links and attachments.</p>
+<h3>Common examples</h3>
+<ul>
+<li>Fake HR emails asking to "confirm your payroll" from a non‑company domain.</li>
+<li>Urgent security alerts that request immediate password change via a link.</li>
+<li>Emails with attachments (invoice.zip, hr_document.pdf.exe) that execute malware.</li>
+</ul>
+<h3>How to spot a phishing email</h3>
+<ul>
+<li>Check the sender's domain carefully — the text before the "@" can look correct but the domain after may be wrong (e.g. <code>hr.prana4life@outlook.com</code> vs <code>hr@prana4life.com</code>).</li>
+<li>Look for poor grammar, spelling mistakes, or odd salutations.</li>
+<li>Hover (don't click) links to see the actual URL — if it doesn't match the claimed organisation, do not click.</li>
+<li>Unexpected attachments or asks for credentials are major red flags.</li>
+</ul>
+<h3>Real quick examples</h3>
+<div class="example-box">
+<strong>Phishing subject:</strong> "Payroll verification required - Immediate action"<br/>
+<strong>Why suspicious:</strong> Sender domain is not the company's domain; contains a short link that redirects to an external site.
+      </div>
+<div class="example-box">
+<strong>Phishing subject:</strong> "Urgent: Update your password"<br/>
+<strong>Why suspicious:</strong> A legitimate password reset would come from <code>it@prana4life.com</code> and include the employee's name or be performed via our internal portal.
+      </div>
+<h3>If you suspect a phishing email — immediate steps</h3>
+<ul>
+<li>Do NOT click any links or open attachments.</li>
+<li>Do NOT reply to the sender.</li>
+<li>Take a screenshot of the email (do not crop headers) and forward it to <strong>it@prana4life.com</strong> with the subject "Suspected Phishing".</li>
+<li>If you clicked a link or entered credentials, change your password immediately and inform IT by phone/Teams as well.</li>
+</ul>
+<h3>Reporting &amp; help</h3>
+<p>Use the buttons below to either report the email or contact IT for help. Reporting helps IT block the sender and protect other employees.</p>
+<div class="actions">
+<a href="https://outlook.office.com/mail/inbox/id/AAQkAGJjZDgzYmZmLTdiNmQtNDdmMi1hMWM5LWFjMjRkOGRhYWE2OAAQAPuaNhGWtUzlq2m2FkvDu%2Bo%3D" target="_blank"><button class="action-btn action-report" id="reportBtn">Report to IT</button></a>
+<a href="https://outlook.office.com/mail/inbox/id/AAQkAGJjZDgzYmZmLTdiNmQtNDdmMi1hMWM5LWFjMjRkOGRhYWE2OAAQAPuaNhGWtUzlq2m2FkvDu%2Bo%3D" target="_blank"><button class="action-btn action-help" id="helpBtn">Contact IT (Teams/Email)</button></a>
+</div>
+<p style="margin-top:18px;font-size:13px;color:#cfcfcf">This guide is part of our security awareness training — please make sure your colleagues read it too.</p>
+</div>
+</div>
+</section>
+<script>
+// Form -> Warning
+document.getElementById('wfhForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  document.querySelector('.center-wrap').style.display = 'none';
+  document.getElementById('warningSection').style.display = 'block';
+  window.scrollTo(0,0);
+});
+// Warning -> Final
+document.getElementById('understandBtn').addEventListener('click', function(){
+  document.getElementById('warningSection').style.display = 'none';
+  document.getElementById('finalScreen').style.display = 'block';
+  document.getElementById('finalScreen').setAttribute('aria-hidden','false');
+  window.scrollTo(0,0);
+});
+// Connect -> Popup
+document.getElementById('connectBtn').addEventListener('click', function(){
+  document.getElementById('popupOverlay').style.display = 'flex';
+});
+document.getElementById('closePopupBtn').addEventListener('click', function(){
+  document.getElementById('popupOverlay').style.display = 'none';
+});
+// Mailto button in popup
+document.getElementById('mailtoBtn').addEventListener('click', function(){
+  window.location.href = 'mailto:it@prana4life.com?subject=Suspected%20Phishing&body=Please%20find%20the%20screenshot%20attached%20(or%20describe%20the%20email).';
+});
+// Learn More - show full help overlay
+document.getElementById('learnBtn').addEventListener('click', function(){
+  var overlay = document.getElementById('learnOverlay');
+  overlay.style.display = 'block';
+  overlay.setAttribute('aria-hidden','false');
+  // set focus for accessibility
+  document.getElementById('learnCloseBtn').focus();
+});
+// Close Learn overlay
+document.getElementById('learnCloseBtn').addEventListener('click', function(){
+  var overlay = document.getElementById('learnOverlay');
+  overlay.style.display = 'none';
+  overlay.setAttribute('aria-hidden','true');
+});
+// Action buttons inside learn overlay
+document.getElementById('reportBtn').addEventListener('click', function(){
+  // open mailto prefilled to report phishing
+  window.location.href = 'mailto:it@prana4life.com?subject=Suspected%20Phishing%20Report&body=I%20am%20reporting%20a%20suspected%20phishing%20email.%0A%0APlease%20advise%20next%20steps.';
+});
+document.getElementById('helpBtn').addEventListener('click', function(){
+  // direct users to reach out by Teams or email; here we open mailto as fallback
+  window.location.href = 'mailto:manaf@prana4life.com?subject=Need%20Immediate%20IT%20Assistance&body=I%20need%20help%20regarding%20a%20suspected%20phishing%20email.';
+});
+// Sure -> Close tab
+document.getElementById('sureBtn').addEventListener('click', function(){
+  try {
+    window.open('', '_self');
+    window.close();
+    setTimeout(function(){ window.location.href = 'about:blank'; }, 200);
+  } catch(e) {
+    window.location.href = 'about:blank';
+  }
+});
+
+// Email validation for company domains
+document.getElementById('wfhForm').addEventListener('submit', function(e) {
+  const emailField = document.getElementById('email');
+  const email = emailField.value.trim();
+  const allowedDomains = ['@prana4life.com', '@rudhrainfosolutions.com'];
+  if (!allowedDomains.some(domain => email.endsWith(domain))) {
+    e.preventDefault();
+    alert('❌ Only official company emails are allowed (use @prana4life.com or @rudhrainfosolutions.com).');
+    emailField.focus();
+    return false;
+  }
+});
+
+</script>
+</body>
+</html>
